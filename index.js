@@ -1,21 +1,28 @@
-
+//פונקציה שמקבלת פראמטר ומדפיסה אותו ומחזירה אותו, נועד לעבוד כמו "פרוקסי" למשתנים
 function lor(params, type) {
-    //if(typeof(type) == "string" && type.includes("inputs"))
+    if(typeof(type) == "string" && type.includes("first"))
     {
         console.log((type ? type : "") + " : ");
         console.log(params)
     }
     return params;
 }
-var basicKeys = ["w","a","s","d"];
+
+var basicKeys = ["w","a","s","d"]; // כמה אאוטפוט ברירת מחדל
+// מחזיר אלמנט רנדומלי ממערך
 Array.prototype.random = function () { return (this[(Math.max(Math.random() * this.length - 1, 0).toFixed())]) } // [true, false].random() return true or false; [0, 2, 3].random() return 0 or 2 or 3
-var arrRandom = function () { return [-1, 0, 1].random() };
+var arrRandom = function () { return [-1, 0, 1].random() }; }// בסיס גנטי לכאורה, מחזירה רנדומלית
+lor(arrRandom(), "arrrandom") // בדיקה של הפונקציה הקודמת
 function outputnull() {
     return null;
-}
-lor(arrRandom(), "arrrandom")
+}// אאוטטפוט לא קיים, מיועד לנוירונוים עם תשובה "ריקה"
+// למלא מערך בנאלים, סיבות באגים\נוחות
 Array.prototype.fillNull = function () { return Array(this.length).fill(null) }
+
 lor(Array(10).fillNull(), "fillnull");
+//בדיקה של הפונקציה הקודמת
+
+// קלאס דור ראשון
 class firstGeneration {
     constructor(num, inputs, outputs, parent) {
         this.num = num
@@ -25,7 +32,7 @@ class firstGeneration {
         this.generation = new Generation(this.num, inputs, outputs, this.basicgen, this.basicgen, true, this)
         this.parent = parent;
     }
-}
+} // קלאס ניהול דורות
 class Generation {
     constructor(num, inputs, outputs, basicgen, basicgen2, mutation, parent) {
         this.inputs = inputs;
@@ -34,6 +41,7 @@ class Generation {
         this.basicgen2 = basicgen2
         this.mutation = mutation;
         var t = this;
+        // יצירת אוכלוסיה
         this.binots = Array(num).fillNull().map(function (v, i) {
             var mybina = new bina(inputs, outputs, basicgen.map(function (v, i) {
                 if (t.mutation)
@@ -55,9 +63,11 @@ class Generation {
         return new Generation(10, [0, 1, 2, 3], basicKeys, Array(10).fillNull(), Array(10).fillNull(), true)
     }
 }
+// דיפולט של דור
 Generation.default = function () {
     return new Generation(10, [0, 1, 2, 3], basicKeys, Array(10).fillNull(), Array(10).fillNull(), true)
 }
+//קלאס בינה מלאכותית
 class bina {
     outputnull() {
         return null;
@@ -74,14 +84,17 @@ class bina {
         this.gen = gen;
         this.parent = parent;
     }
+    // חישוב פיטנס
     fitness(score, time) {
         return score / time;
     }
+    // קבלת גן ספציפי לפי אינפוט מסויים ואאוטפוט מסוים
     geio(input, output) {
         lor(input, "in");
         lor(output, "op");
         return this.gen[input * output]
     }
+    // לכאן מכניסים עדכונים של קלט
     update(inputs) {
         //inputs = arr with one of the values [-1,0,1]
         var toreturn = []
@@ -102,7 +115,10 @@ class bina {
         return outputs.filter(function (v) { if (v != outputnull()) return true })
     }
 }
+// בדיקה
 Generation.default().binots.forEach(function (element) {
     lor(element, "element")
 }, this);
+// שימוש כשורת פקודה לבדיקה מהירה:
+// node index.js input1,input2,input3,input4,... return w/a/s/d
 lor((new firstGeneration(10, 10, process.argv[2].split(",") ? process.argv[2].split(",") : basicKeys)).generation.binots[0].update([0, 1, -1]), "first")
